@@ -5,13 +5,28 @@ import pkg.trader.Trader;
 
 public class SellOrder extends Order {
 	public SellOrder(String stockSymbol, int size, double price, Trader trader) {
-		// TODO:
-		// Create a new sell order
+		this.size = size;
+		this.stockSymbol = stockSymbol;
+		this.price = price;
+		this.trader = trader;
+		this.orderNumber = getNextOrderNumber();
 	}
 
 	public SellOrder(String stockSymbol, int size, boolean isMarketOrder,
 			Trader trader) throws StockMarketExpection {
+		if(isMarketOrder == false) {
+			throw new StockMarketExpection("This order has been placed without a valid price");
+		}
+		else {
+			this.isMarketOrder = true;
+		}
+		this.size = size;
+		this.stockSymbol = stockSymbol;
+		this.trader = trader;
+		this.orderNumber = getNextOrderNumber();
+		this.price = 0.0;
 		// TODO:
+		/* CAN CLEAN UP LATER*/
 		// Create a new sell order which is a market order
 		// Set the price to 0.0, Set isMarketOrder attribute to true
 		//
