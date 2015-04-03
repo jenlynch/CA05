@@ -27,8 +27,6 @@ public class BuyOrder extends Order {
 		this.trader = trader;
 		this.orderNumber = getNextOrderNumber();
 		this.price = 0.0;
-	this.price = 7.8;
-	//test change
 	}
 
 	public void printOrder() {
