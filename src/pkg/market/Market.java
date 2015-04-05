@@ -108,5 +108,6 @@ public class Market {
 	public void triggerTrade() {
 		orderBook.trade();
 	}
+	
 
 }
