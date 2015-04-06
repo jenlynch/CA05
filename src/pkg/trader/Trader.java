@@ -81,16 +81,19 @@ public class Trader {
 				else {
 					throw new StockMarketExpection(this.name + " cannot place a sell order for a stock not owned");
 				}
-				
 		}
 		
 		if (order == null) {
 			throw new StockMarketExpection("Not a valid order type");
 		}
 		else {
-			
-			this.ordersPlaced.add(order);
-			m.addOrder(order);
+			if (OrderUtility.isAlreadyPresent(this.ordersPlaced, order)) {
+				throw new StockMarketExpection("There is already an order for this stock");
+			}
+			else {
+				this.ordersPlaced.add(order);
+				m.addOrder(order);
+			}
 		
 		}
 	}
