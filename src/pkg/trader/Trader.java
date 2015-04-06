@@ -8,6 +8,7 @@ import pkg.order.BuyOrder;
 import pkg.order.Order;
 import pkg.order.OrderType;
 import pkg.order.SellOrder;
+import pkg.util.OrderUtility;
 
 public class Trader {
 	// Name of the trader
@@ -64,19 +65,23 @@ public class Trader {
 		
 		//TODO check to see if trader is trying to sell more stock than he owns
 		Order order = null;
+		
 		if (orderType == OrderType.BUY) {
 			order = new BuyOrder(symbol, volume, price, this);
 		}
 		else if (orderType == OrderType.SELL) {
-			for (Order o : this.position) {
-				if (o.getStockSymbol().equals(symbol)) {
-					order = new SellOrder(symbol, volume, price, this);
-					break;
+				if (OrderUtility.owns(this.position, symbol)) {
+					if (OrderUtility.ownedQuantity(this.position, symbol) <= volume) {
+						order = new SellOrder(symbol, volume, price, this);
+					}
+					else {
+						throw new StockMarketExpection("Sell order volume is larger than amount of stock owned");
+					}
 				}
 				else {
 					throw new StockMarketExpection(this.name + " cannot place a sell order for a stock not owned");
 				}
-			}
+				
 		}
 		
 		if (order == null) {
