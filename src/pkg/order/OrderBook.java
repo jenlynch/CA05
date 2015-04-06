@@ -17,6 +17,15 @@ public class OrderBook {
 	}
 
 	public void addToOrderBook(Order order) {
+		ArrayList<Order> orderList = buyOrders.get(order.getStockSymbol());
+		if (order instanceof BuyOrder) {
+			orderList.add(order);
+			buyOrders.put(order.getStockSymbol(), orderList);
+		}
+		if (order instanceof SellOrder) {
+			orderList.add(order);
+			sellOrders.put(order.getStockSymbol(), orderList);
+		}
 		// Populate the buyOrders and sellOrders data structures, whichever
 		// appropriate
 	}

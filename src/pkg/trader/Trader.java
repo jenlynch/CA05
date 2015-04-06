@@ -7,6 +7,7 @@ import pkg.market.Market;
 import pkg.order.BuyOrder;
 import pkg.order.Order;
 import pkg.order.OrderType;
+import pkg.order.SellOrder;
 
 public class Trader {
 	// Name of the trader
@@ -49,18 +50,44 @@ public class Trader {
 	public void placeNewOrder(Market m, String symbol, int volume,
 			double price, OrderType orderType) throws StockMarketExpection {
 		// Place a new order and add to the orderlist
-		// Also enter the order into the orderbook of the market.
-		// Note that no trade has been made yet. The order is in suspension
-		// until a trade is triggered.
-		//
-		// If the stock's price is larger than the cash possessed, then an
-		// exception is thrown
-		// A trader cannot place two orders for the same stock, throw an
-		// exception if there are multiple orders for the same stock.
-		// Also a person cannot place a sell order for a stock that he does not
-		// own. Or he cannot sell more stocks than he possesses. Throw an
-		// exception in these cases.
-
+				// Also enter the order into the orderbook of the market.
+				// Note that no trade has been made yet. The order is in suspension
+				// until a trade is triggered.
+				//
+				// If the stock's price is larger than the cash possessed, then an
+				// exception is thrown
+				// A trader cannot place two orders for the same stock, throw an
+				// exception if there are multiple orders for the same stock.
+				// Also a person cannot place a sell order for a stock that he does not
+				// own. Or he cannot sell more stocks than he possesses. Throw an
+				// exception in these cases.
+		
+		//TODO check to see if trader is trying to sell more stock than he owns
+		Order order = null;
+		if (orderType == OrderType.BUY) {
+			order = new BuyOrder(symbol, volume, price, this);
+		}
+		else if (orderType == OrderType.SELL) {
+			for (Order o : this.position) {
+				if (o.getStockSymbol().equals(symbol)) {
+					order = new SellOrder(symbol, volume, price, this);
+					break;
+				}
+				else {
+					throw new StockMarketExpection(this.name + " cannot place a sell order for a stock not owned");
+				}
+			}
+		}
+		
+		if (order == null) {
+			throw new StockMarketExpection("Not a valid order type");
+		}
+		else {
+			
+			this.ordersPlaced.add(order);
+			m.addOrder(order);
+		
+		}
 	}
 
 	public void placeNewMarketOrder(Market m, String symbol, int volume,
