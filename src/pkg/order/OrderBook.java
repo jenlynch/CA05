@@ -67,6 +67,12 @@ public class OrderBook {
 			for (Order o : pair.getValue()) {
 				updateOrderBook(o);
 			}
+			
+			for (int i = 0; i < cumulativeSellOrders.keySet().size(); i++) {
+				double nextPrice;
+				//int next = cumulativeSellOrders.get();
+				
+			}
 			System.out.println(cumulativeSellOrders.toString());
 
 			matchPrice = findMatchPrice(matchPrice);
