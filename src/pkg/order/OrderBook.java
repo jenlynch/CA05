@@ -67,6 +67,14 @@ public class OrderBook {
 			for (Order o : pair.getValue()) {
 				updateOrderBook(o);
 			}
+			
+			for (int i = 0; i < cumulativeSellOrders.keySet().size(); i++) {
+				double nextPrice;
+				//int next = cumulativeSellOrders.get();
+				
+			}
+			System.out.println(cumulativeSellOrders.toString());
+
 			matchPrice = findMatchPrice(matchPrice);
 			ps.setNewPrice(this.m, pair.getKey(), matchPrice);
 			//TODO observer pattern?
@@ -85,6 +93,8 @@ public class OrderBook {
 	}
 
 	private double findMatchPrice(double matchPrice) {
+		//TODO find minimum of two values
+		//cumulative least favorable price
 		int tempMaxTrades = 0;
 		for (double price : cumulativeSellOrders.keySet()) {
 			int numTrades = Math.abs(cumulativeSellOrders.get(price) - cumulativeBuyOrders.get(price));
