@@ -103,9 +103,7 @@ public class Trader {
 
 	public void placeNewMarketOrder(Market m, String symbol, int volume,
 			double price, OrderType orderType) throws StockMarketExpection {
-		//ddd
 		// Similar to the other method, except the order is a market order
-		int character = 0;
 				if (price > cashInHand) {
 					throw new StockMarketExpection("Trader does not have enough cash");
 				}
