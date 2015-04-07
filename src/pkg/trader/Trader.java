@@ -180,7 +180,6 @@ public class Trader {
 			this.position.add(order);
 			this.cashInHand += cashMoved;
 		}
-
 	}
 
 	public void printTrader() {
