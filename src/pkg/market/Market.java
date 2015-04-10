@@ -109,5 +109,8 @@ public class Market {
 		orderBook.trade();
 	}
 	
+	public OrderBook getOrderBook() {
+		return this.orderBook;
+	}
 
 }

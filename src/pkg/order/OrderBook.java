@@ -12,6 +12,7 @@ public class OrderBook {
 	PriceSetter ps;
 	HashMap<String, ArrayList<Order>> buyOrders;
 	HashMap<String, ArrayList<Order>> sellOrders;
+	double matchingPrice;
 	//HashMap<Double, Integer> cumulativeBuyOrders; //price, total order volume for price
 	//HashMap<Double, Integer> cumulativeSellOrders; //price, total order volume for price
 
@@ -98,6 +99,7 @@ public class OrderBook {
 				ArrayList<Order> marketOrders = sorted.remove(0.0);
 				int totalBuys = 0, totalSells = 0;
 				
+				if (marketOrders != null) {
 				for (Order marketOrder : marketOrders) {
 					if (marketOrder instanceof BuyOrder) {
 						totalBuys += marketOrder.getSize();
@@ -106,6 +108,7 @@ public class OrderBook {
 					else {
 						totalSells += marketOrder.getSize();
 					}
+				}
 				}
 				
 				// cumulative prices structures
@@ -146,7 +149,7 @@ public class OrderBook {
 				int difference = Integer.MAX_VALUE;
 				int k = 0;
 				int matchingIndex = -1;
-				double matchingPrice = marketPrice;
+				matchingPrice = marketPrice;
 				
 				while (difference > 0 && k < numPrices) {
 					int temp = cumulativeLeastBuys[k] - cumulativeLeastSells[k];
@@ -179,6 +182,7 @@ public class OrderBook {
 				// 5. Delegate to trader that the trade has been made, so that the
 				// trader's orders can be placed to his possession (a trader's position
 				// is the stocks he owns)
+				if (marketOrders != null) {
 				for (Order marketOrder : marketOrders) { // remove market trades
 					if (marketOrder instanceof BuyOrder) {
 						buyOrders.get(stock).remove(marketOrder);
@@ -192,6 +196,7 @@ public class OrderBook {
 					catch (StockMarketExpection e) {
 						e.printStackTrace();
 					}
+				}
 				}
 				
 				for (double price : sorted.keySet()) { 
