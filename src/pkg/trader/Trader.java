@@ -30,14 +30,19 @@ public class Trader {
 
 	public void buyFromBank(Market m, String symbol, int volume)
 			throws StockMarketExpection {
-
+		
+		//Get total stock price
 		double price = m.getStockForSymbol(symbol).getPrice();
-		if ((price * volume) > this.cashInHand) {
+		
+		//Check if trader has enough cash
+		if (price * volume > cashInHand) {
 			throw new StockMarketExpection(this.name + " cannot afford to buy this stock");
 		}
+		
 		Order order = new BuyOrder(symbol, volume, price , this);
 		this.position.add(order);
 		this.cashInHand -= price * volume;
+
 
 		// Buy stock straight from the bank
 		// Need not place the stock in the order list
@@ -63,10 +68,13 @@ public class Trader {
 		// own. Or he cannot sell more stocks than he possesses. Throw an
 		// exception in these cases.
 
+		
 		double total = price * volume;
+		
 
 		//Check if trader has enough cash to buy stock
 		if (orderType == OrderType.BUY && total > cashInHand) {
+
 			throw new StockMarketExpection(this.name + " cannot afford to buy this stock");
 		}
 
@@ -92,22 +100,18 @@ public class Trader {
 		if (orderType == OrderType.SELL && !OrderUtility.owns(position, symbol)) {
 			throw new StockMarketExpection(this.name + " cannot place a sell order for a stock not owned");
 		}
-
-		// Check for invalid orders
-		if (order == null) {
-			throw new StockMarketExpection("Not a valid order type");
-		}
-
-		// Enter order into orderbook
+		
 		m.addOrder(order);
-
-		//Update orders placed
 		this.ordersPlaced.add(order);
+
+
 	}
 
 	public void placeNewMarketOrder(Market m, String symbol, int volume,
 			double price, OrderType orderType) throws StockMarketExpection {
+	
 		// Similar to the other method, except the order is a market order
+
 		double total = m.getStockForSymbol(symbol).getPrice() * volume;
 
 		//Check if trader has enough cash to buy stock
@@ -137,16 +141,9 @@ public class Trader {
 		if (orderType == OrderType.SELL && !OrderUtility.owns(position, symbol)) {
 			throw new StockMarketExpection(this.name + " cannot place a sell order for a stock not owned");
 		}
-
-		// Check for invalid orders
-		if (order == null) {
-			throw new StockMarketExpection("Not a valid order type");
-		}
-
+		
 		// Enter order into orderbook
 		m.addOrder(order);
-
-		//Update orders placed
 		this.ordersPlaced.add(order);
 
 	}
@@ -161,21 +158,24 @@ public class Trader {
 
 		// Update the trader's orderPlaced, position, and cashInHand members
 		// based on the notification.
+		
+		
+		//Order order = OrderUtility.findAndExtractOrder(this.position, o.getStockSymbol());
+
 		if (!OrderUtility.isAlreadyPresent(ordersPlaced, o)) {
 			throw new StockMarketExpection("Order does not exist in ordersPlaced");
 		}
-
+		
 		if (SellOrder.class.isInstance(o)) {		
-			this.cashInHand += matchPrice * o.getSize(); // update cashInHand
-			OrderUtility.findAndExtractOrder(position, o.getStockSymbol()); // update position
-
+			this.cashInHand += matchPrice * o.getSize();
+			OrderUtility.findAndExtractOrder(position, o.getStockSymbol());
+			
 		} else if (BuyOrder.class.isInstance(o)) {
-			this.cashInHand -= matchPrice * o.getSize(); // update cashInHand
-			this.position.add(o); // update position
+			this.cashInHand -= matchPrice * o.getSize(); 
+			this.position.add(o); 
 
 		}
-
-		this.ordersPlaced.remove(o); // update ordersPlaced
+		this.ordersPlaced.remove(o);
 
 	}
 
